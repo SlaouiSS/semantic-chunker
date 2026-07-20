@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.github.semanticchunker</groupId>
+    <artifactId>semantic-chunker</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>semantic-chunker</name>
+    <description>
+        A focused Java library for turning documents into high-quality semantic chunks using a
+        language model. This is the multi-module aggregator and the parent that owns every shared
+        version and build configuration.
+    </description>
+    <url child.project.url.inherit.append.path="false">https://github.com/SlaouiSS/semantic-chunker</url>
+
+    <licenses>
+        <license>
+            <name>Apache-2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <!-- Developer metadata is required by Maven Central. -->
+    <developers>
+        <developer>
+            <id>SlaouiSS</id>
+            <name>Salaheddine Slaoui</name>
+            <url>https://github.com/SlaouiSS</url>
+        </developer>
+    </developers>
+
+    <modules>
+        <module>semantic-chunker-core</module>
+        <module>semantic-chunker-spring-ai</module>
+        <module>semantic-chunker-tika</module>
+        <module>semantic-chunker-unstructured</module>
+    </modules>
+
+    <!--
+        SCM metadata is required by Maven Central. The values derive from the project URL. The
+        inherit-append-path attributes keep every module's SCM pointing at the one repository rather
+        than appending the module name.
+    -->
+    <scm child.scm.connection.inherit.append.path="false"
+         child.scm.developerConnection.inherit.append.path="false"
+         child.scm.url.inherit.append.path="false">
+        <url>${project.url}</url>
+        <connection>${scm.connection}</connection>
+        <developerConnection>${scm.developerConnection}</developerConnection>
+        <tag>${scm.tag}</tag>
+    </scm>
+
+    <properties>
+        <!-- Language level: the constitution's documented baseline (CONTRIBUTING_ARCHITECTURE.md, section 4.2.5). -->
+        <maven.compiler.release>21</maven.compiler.release>
+
+        <!-- Encodings. -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Reproducible builds: a fixed, non-wall-clock timestamp stamped into every artifact. -->
+        <project.build.outputTimestamp>2024-01-01T00:00:00Z</project.build.outputTimestamp>
+
+        <!-- Build plugin versions, managed centrally so no child repeats them. -->
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
+        <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
+        <spotless-maven-plugin.version>2.44.0</spotless-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+        <google-java-format.version>1.22.0</google-java-format.version>
+
+        <!-- Test dependency versions, managed centrally. -->
+        <junit.version>5.11.4</junit.version>
+        <assertj.version>3.26.3</assertj.version>
+        <mockito.version>5.14.2</mockito.version>
+
+        <!-- Enforced minimum Maven version. -->
+        <minimum-maven.version>3.9.0</minimum-maven.version>
+
+        <!-- SCM coordinates for the release metadata, derived from the project URL. -->
+        <scm.connection>scm:git:${project.url}.git</scm.connection>
+        <scm.developerConnection>scm:git:${project.url}.git</scm.developerConnection>
+        <scm.tag>HEAD</scm.tag>
+
+        <!-- Release plugin versions, used only by the 'release' profile. -->
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
+        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+        <central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
+        <versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>
+
+        <!-- Lets a dry-run release build skip signing when no key is present: -Dgpg.skip=true -->
+        <gpg.skip>false</gpg.skip>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Internal modules: adapters reference the core without repeating the version. -->
+            <dependency>
+                <groupId>io.github.semanticchunker</groupId>
+                <artifactId>semantic-chunker-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- Test stack, shared by every module. -->
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>${mockito.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <release>${maven.compiler.release}</release>
+                        <!-- Record method parameter names in the bytecode. -->
+                        <parameters>true</parameters>
+                        <compilerArgs>
+                            <arg>-Xlint:all</arg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven-failsafe-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${maven-enforcer-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>enforce-build-environment</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <requireMavenVersion>
+                                        <version>${minimum-maven.version}</version>
+                                    </requireMavenVersion>
+                                    <requireJavaVersion>
+                                        <version>${maven.compiler.release}</version>
+                                    </requireJavaVersion>
+                                    <banDuplicatePomDependencyVersions/>
+                                    <reactorModuleConvergence/>
+                                    <!--
+                                        No SNAPSHOT dependencies in a release. Inert for SNAPSHOT
+                                        (developer) builds because of onlyWhenRelease, so this does
+                                        not affect the normal build.
+                                    -->
+                                    <requireReleaseDeps>
+                                        <onlyWhenRelease>true</onlyWhenRelease>
+                                    </requireReleaseDeps>
+                                </rules>
+                                <failFast>true</failFast>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.diffplug.spotless</groupId>
+                    <artifactId>spotless-maven-plugin</artifactId>
+                    <version>${spotless-maven-plugin.version}</version>
+                    <configuration>
+                        <java>
+                            <googleJavaFormat>
+                                <version>${google-java-format.version}</version>
+                                <style>AOSP</style>
+                                <reflowLongStrings>true</reflowLongStrings>
+                            </googleJavaFormat>
+                            <removeUnusedImports/>
+                            <importOrder/>
+                            <trimTrailingWhitespace/>
+                            <endWithNewline/>
+                        </java>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>spotless-check</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>jacoco-prepare-agent</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>jacoco-report</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- Version pin only, so 'mvn versions:set' during a release uses a fixed version. -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>${versions-maven-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <!-- Active in every module: environment enforcement, formatting gate, coverage agent. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!--
+            Release profile: attaches the source and Javadoc JARs, signs every artifact, and publishes
+            to Maven Central. It is kept out of the default build so ordinary 'verify' stays fast and
+            needs no signing key. Publish with 'mvn -Prelease deploy'. Dry run without a key:
+            'mvn -Prelease -Dgpg.skip=true clean verify' (builds and validates the sources and Javadoc
+            JARs, signs nothing, publishes nothing).
+        -->
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${maven-source-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven-javadoc-plugin.version}</version>
+                        <configuration>
+                            <quiet>true</quiet>
+                            <doclint>all,-missing</doclint>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <configuration>
+                            <skip>${gpg.skip}</skip>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central-publishing-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <!-- Credentials come from a settings.xml server with this id. -->
+                            <publishingServerId>central</publishingServerId>
+                            <!-- Upload to the Central portal but require a manual publish click. -->
+                            <autoPublish>false</autoPublish>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

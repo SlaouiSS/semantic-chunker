@@ -1,0 +1,53 @@
+# Maven build output
+target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/.develocity/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+
+# JaCoCo
+*.exec
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+nbproject/
+nb-configuration.xml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and temp
+*.log
+*.tmp
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Backup files
+*.bak
+*.orig
+*.rej
+*~
+
+# AI assistant tooling (local, not part of the project)
+.claude/
+.cursor/
+.continue/
+.codeium/
+.windsurf/
+.aider*

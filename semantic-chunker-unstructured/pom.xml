@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.github.semanticchunker</groupId>
+        <artifactId>semantic-chunker</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>semantic-chunker-unstructured</artifactId>
+    <packaging>jar</packaging>
+
+    <name>semantic-chunker-unstructured</name>
+    <description>
+        A DocumentExtractor that turns documents into the normalized representation using the
+        Unstructured partition API. Depends on the core; the core does not depend on it.
+    </description>
+
+    <properties>
+        <!--
+            Upstream versions are declared here rather than in the parent so their churn stays inside
+            the module that adapts them and never reaches the core (CONTRIBUTING_ARCHITECTURE.md,
+            section 13.4).
+        -->
+        <jackson.version>2.18.3</jackson.version>
+        <jsoup.version>1.19.1</jsoup.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.semanticchunker</groupId>
+            <artifactId>semantic-chunker-core</artifactId>
+        </dependency>
+
+        <!--
+            The HTTP transport is java.net.http.HttpClient from the JDK, so no HTTP dependency is
+            declared. Two libraries are needed and no more: Jackson to parse the partition response,
+            and jsoup to turn a table's text_as_html into cells and Markdown (Phase U1 dependency
+            analysis).
+        -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>

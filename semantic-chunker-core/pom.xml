@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.github.semanticchunker</groupId>
+        <artifactId>semantic-chunker</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>semantic-chunker-core</artifactId>
+    <packaging>jar</packaging>
+
+    <name>semantic-chunker-core</name>
+    <description>
+        The pipeline and the domain model, plus the two extension contracts (ChunkingModel and
+        DocumentExtractor). Depends on no extraction technology and no model provider.
+    </description>
+
+    <dependencies>
+        <!--
+            The core carries no framework, transport, extraction, or provider dependencies
+            (ARCHITECTURE.md, section 9; CONTRIBUTING_ARCHITECTURE.md, section 3.1). Its only
+            dependencies are the test stack, which never leaves test scope.
+        -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>

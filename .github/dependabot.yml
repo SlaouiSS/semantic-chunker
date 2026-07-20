@@ -1,0 +1,31 @@
+version: 2
+updates:
+  # Keep Maven dependencies and plugins up to date across the whole multi-module build.
+  - package-ecosystem: maven
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+    groups:
+      # Batch all non-major upgrades into a single PR to cut review noise; major
+      # upgrades still arrive as individual PRs so they get deliberate review.
+      maven-minor-and-patch:
+        update-types:
+          - minor
+          - patch
+
+  # Keep GitHub Actions used by the workflows up to date (including the pinned SHAs).
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - github-actions
+    groups:
+      # One PR for all action updates.
+      github-actions:
+        patterns:
+          - "*"

@@ -1,0 +1,16 @@
+# Code owners for semantic-chunker.
+# Owners are requested for review automatically when matching files change.
+#
+# NOTE: replace the placeholder owner below with the real GitHub user or team that owns the
+# repository. It is intentionally a placeholder because the repository's owning account/team is not
+# yet known at bootstrap time.
+
+# Default owner for everything in the repository.
+*                       @semanticchunker/maintainers
+
+# The design documentation and the engineering constitution are the specification; changes there
+# warrant maintainer review.
+/docs/                  @semanticchunker/maintainers
+
+# The public API and the two SPIs are ten-year commitments.
+/semantic-chunker-core/ @semanticchunker/maintainers

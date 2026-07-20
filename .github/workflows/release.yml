@@ -1,0 +1,61 @@
+name: Release
+
+# Manual only — this never runs automatically. It is ready to use once the
+# secrets below and the "release" environment are configured; until then it is
+# inert. It drives the release profile defined in the parent POM (Phase R1); it
+# does not define any release behaviour of its own.
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: "Build and validate the release without publishing"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+# Never run two releases at once, and never cancel one in flight.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish to Maven Central
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # A protected environment lets maintainers require manual approval and scope
+    # the release secrets to this workflow only.
+    environment: release
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@c1e323688fd81a25caa38c78aa6df2d33d3e20d9 # v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+          # Writes a settings.xml server 'central' whose credentials come from the
+          # env vars below, and imports the signing key for the maven-gpg-plugin.
+          server-id: central
+          server-username: CENTRAL_USERNAME
+          server-password: CENTRAL_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: GPG_PASSPHRASE
+
+      - name: Publish
+        shell: bash
+        env:
+          CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          if [ "${{ inputs.dry-run }}" = "true" ]; then
+            ./mvnw --batch-mode --no-transfer-progress -Prelease -Dgpg.skip=true verify
+          else
+            ./mvnw --batch-mode --no-transfer-progress -Prelease deploy
+          fi

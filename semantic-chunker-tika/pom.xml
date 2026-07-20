@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.github.semanticchunker</groupId>
+        <artifactId>semantic-chunker</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>semantic-chunker-tika</artifactId>
+    <packaging>jar</packaging>
+
+    <name>semantic-chunker-tika</name>
+    <description>
+        A DocumentExtractor that turns documents into the normalized representation using Apache
+        Tika. Depends on the core; the core does not depend on it.
+    </description>
+
+    <properties>
+        <!--
+            The Tika version is declared here rather than in the parent so that the churn of this
+            upstream stays inside the module that adapts it and never reaches the core
+            (CONTRIBUTING_ARCHITECTURE.md, section 13.4). Tika 3.3.1 is the current stable line;
+            4.0.0 is still pre-release and is deliberately not used by a long-lived library.
+        -->
+        <tika.version>3.3.1</tika.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.tika</groupId>
+                <artifactId>tika-bom</artifactId>
+                <version>${tika.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.semanticchunker</groupId>
+            <artifactId>semantic-chunker-core</artifactId>
+        </dependency>
+
+        <!--
+            A targeted set of Tika parser modules rather than the full tika-parsers-standard-package.
+            The full package pulls ~87 transitive artifacts; this set pulls ~50, dropping every parser
+            the library does not need (mail, scientific, CAD, package, audio, ...) and with it a large
+            slice of the CVE surface, while keeping supportedMediaTypes() honest about what is actually
+            handled (Phase T1 dependency analysis). tika-core carries the Parser SPI, the SAX handlers,
+            and the exception hierarchy; each parser module contributes one family of formats.
+        -->
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-parser-pdf-module</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-parser-microsoft-module</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-parser-html-module</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-parser-text-module</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>

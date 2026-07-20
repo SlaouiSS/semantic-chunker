@@ -1,0 +1,33 @@
+# EditorConfig — https://editorconfig.org
+# Shared editor defaults, aligned with the build's formatting gate (Spotless + google-java-format AOSP).
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.java]
+indent_size = 4
+max_line_length = 100
+
+[*.{xml,pom}]
+indent_size = 4
+
+[*.{yml,yaml,json}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+[Makefile]
+indent_style = tab
+
+# Maven Wrapper scripts are generated; leave their formatting untouched.
+[mvnw]
+indent_style = tab
+[mvnw.cmd]
+end_of_line = crlf
