@@ -68,28 +68,28 @@ technical merit.
 
 ## Installation
 
-Artifacts are published to Maven Central under the group `io.github.semanticchunker`.
+Artifacts are published to Maven Central under the group `io.github.slaouiss`.
 Add the core plus the adapters you need. The first release is `1.0.0`; use the latest
 release version.
 
 ```xml
 <!-- Always required. -->
 <dependency>
-    <groupId>io.github.semanticchunker</groupId>
+    <groupId>io.github.slaouiss</groupId>
     <artifactId>semantic-chunker-core</artifactId>
     <version>1.0.0</version>
 </dependency>
 
 <!-- A model adapter (choose one, or supply your own ChunkingModel). -->
 <dependency>
-    <groupId>io.github.semanticchunker</groupId>
+    <groupId>io.github.slaouiss</groupId>
     <artifactId>semantic-chunker-spring-ai</artifactId>
     <version>1.0.0</version>
 </dependency>
 
 <!-- An extractor adapter (choose one, or supply your own DocumentExtractor). -->
 <dependency>
-    <groupId>io.github.semanticchunker</groupId>
+    <groupId>io.github.slaouiss</groupId>
     <artifactId>semantic-chunker-tika</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -98,9 +98,9 @@ release version.
 Gradle:
 
 ```groovy
-implementation "io.github.semanticchunker:semantic-chunker-core:1.0.0"
-implementation "io.github.semanticchunker:semantic-chunker-spring-ai:1.0.0"
-implementation "io.github.semanticchunker:semantic-chunker-tika:1.0.0"
+implementation "io.github.slaouiss:semantic-chunker-core:1.0.0"
+implementation "io.github.slaouiss:semantic-chunker-spring-ai:1.0.0"
+implementation "io.github.slaouiss:semantic-chunker-tika:1.0.0"
 ```
 
 Each module pulls only its own technology: adding the Tika extractor does not put
