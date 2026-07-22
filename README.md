@@ -1,11 +1,73 @@
 # semantic-chunker
 
+**Meaning-aware document chunking for Java — purpose-built for RAG and LLM pipelines.**
+
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.slaouiss/semantic-chunker-core?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.slaouiss/semantic-chunker-core)
+[![Build](https://github.com/SlaouiSS/semantic-chunker/actions/workflows/ci.yml/badge.svg)](https://github.com/SlaouiSS/semantic-chunker/actions/workflows/ci.yml)
+[![Java 21+](https://img.shields.io/badge/Java-21%2B-blue.svg)](https://openjdk.org/projects/jdk/21/)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
 A Java library for turning documents into high-quality semantic chunks, ready for
 embeddings and retrieval. It takes an arbitrary document, normalizes it into a
 consistent representation, and divides it along boundaries that respect the meaning
 of the text rather than its size or its markup. It does this one thing, and
 delegates everything else — parsing, model transport, embeddings, storage,
 retrieval — to the mature libraries that already solve those problems.
+
+- **What it is** — a small Java 21 library that turns documents into semantically coherent chunks.
+- **Why it matters** — in retrieval-augmented generation (RAG) and semantic search, chunk quality drives retrieval quality; meaning-aligned chunks keep sentences whole and context intact.
+- **How to start** — add the [dependencies](#installation), then copy the [Quick start](#quick-start).
+
+**Pipeline**
+
+```text
+  PDF · DOCX · HTML · …                    raw input document
+           │
+           ▼
+   ┌─────────────────────┐
+   │  DocumentExtractor  │    SPI · Apache Tika · Unstructured · your own
+   └─────────────────────┘
+           │
+           ▼
+     PreparedDocument         normalized, ordered DocumentUnits (+ provenance)
+           │
+           ▼
+   ┌─────────────────────┐     consults
+   │   SemanticChunker   │ ──────────────▶  ChunkingModel   SPI · Spring AI · your own
+   │      (pipeline)     │ ◀──────────────  → language model
+   └─────────────────────┘    boundaries
+           │
+           ▼
+      Semantic Chunks         coherent · self-contained · traceable to the source
+```
+
+> [!NOTE]
+> **Philosophy — do one thing well.** semantic-chunker performs semantic document
+> chunking and nothing else. Parsing, model access, embeddings, storage, and retrieval
+> are delegated to dedicated libraries. What remains is a small, stable core with
+> exactly two extension points: a `DocumentExtractor` and a `ChunkingModel`.
+
+## Table of contents
+
+- [Why semantic-chunker?](#why-semantic-chunker)
+- [How it compares](#how-it-compares)
+- [Typical use cases](#typical-use-cases)
+- [Features](#features)
+- [Non-goals](#non-goals)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Quick start](#quick-start)
+- [Architecture](#architecture)
+- [Supported document formats](#supported-document-formats)
+- [Supported model providers](#supported-model-providers)
+- [Extension points](#extension-points)
+- [Thread safety](#thread-safety)
+- [Error handling](#error-handling)
+- [Performance considerations](#performance-considerations)
+- [FAQ](#faq)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
@@ -28,6 +90,35 @@ identify where one coherent section ends and the next begins, producing chunks t
 are individually coherent and self-contained. When chunks respect semantic
 boundaries, retrieval matches on substance and the model that consumes them reasons
 over intact context.
+
+## How it compares
+
+The same document, cut three ways:
+
+| Concern | Fixed-size chunking | Structural chunking | semantic-chunker |
+| --- | --- | --- | --- |
+| Meaning preservation | None — cuts at a character or token count | Follows formatting, not meaning | Boundaries chosen by meaning |
+| Sentence integrity | Often broken mid-sentence | Usually preserved | Preserved |
+| Context coherence | Low | Medium | High |
+| Formatting independence | Ignores structure entirely | Depends on structure | Independent of structure |
+| LLM-based boundaries | No | No | Yes |
+
+Fixed-size chunking is the fastest and cheapest; structural chunking is a reasonable
+middle ground when a document's formatting happens to track its meaning. semantic-chunker
+is for when boundary quality matters enough to consult a language model.
+
+## Typical use cases
+
+Semantic chunking fits wherever retrieval or reasoning quality depends on chunk quality:
+
+- **Retrieval-augmented generation (RAG)** — coherent chunks retrieve on substance and give the model intact context to reason over.
+- **AI assistants** — grounding answers in self-contained passages rather than arbitrary fragments.
+- **Enterprise and semantic search** — indexing meaning-aligned units so matches land on whole ideas.
+- **Knowledge bases** — turning long documents into passages that stand on their own.
+- **Document intelligence** — preprocessing PDFs, Office files, and HTML into units with preserved provenance.
+
+semantic-chunker addresses only the chunking step in these pipelines; embedding,
+storage, and retrieval remain yours to choose.
 
 ---
 
@@ -152,6 +243,11 @@ for (SemanticChunk chunk : result.chunks()) {
     System.out.println(text);
 }
 ```
+
+> [!IMPORTANT]
+> `chunk` performs I/O, blocks, and calls a language model one or more times, so it
+> incurs latency and monetary cost. Build the chunker once and reuse it; the call
+> itself is where the work and the cost happen.
 
 `chunk` is also overloaded for a `DocumentSource` (raw bytes plus a media type) and a
 `PreparedDocument` (an already-extracted document, which skips extraction). The
