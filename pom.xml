@@ -7,7 +7,7 @@
 
     <groupId>io.github.slaouiss</groupId>
     <artifactId>semantic-chunker</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>semantic-chunker</name>
@@ -65,7 +65,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Reproducible builds: a fixed, non-wall-clock timestamp stamped into every artifact. -->
-        <project.build.outputTimestamp>2026-07-21T19:08:30Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2026-07-22T15:30:46Z</project.build.outputTimestamp>
 
         <!-- Build plugin versions, managed centrally so no child repeats them. -->
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
