@@ -26,7 +26,7 @@
             upstream stays inside the module that adapts it and never reaches the core
             (CONTRIBUTING_ARCHITECTURE.md, section 13.4).
         -->
-        <spring-ai.version>2.0.0</spring-ai.version>
+        <spring-ai.version>2.0.1</spring-ai.version>
     </properties>
 
     <dependencyManagement>
