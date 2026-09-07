@@ -26,8 +26,8 @@
             the module that adapts them and never reaches the core (CONTRIBUTING_ARCHITECTURE.md,
             section 13.4).
         -->
-        <jackson.version>2.18.3</jackson.version>
-        <jsoup.version>1.19.1</jsoup.version>
+        <jackson.version>2.22.2</jackson.version>
+        <jsoup.version>1.23.2</jsoup.version>
     </properties>
 
     <dependencyManagement>
