@@ -160,8 +160,14 @@ technical merit.
 ## Installation
 
 Artifacts are published to Maven Central under the group `io.github.slaouiss`.
-Add the core plus the adapters you need. The first release is `1.0.0`; use the latest
-release version.
+
+- [semantic-chunker-core](https://central.sonatype.com/artifact/io.github.slaouiss/semantic-chunker-core)
+- [semantic-chunker-spring-ai](https://central.sonatype.com/artifact/io.github.slaouiss/semantic-chunker-spring-ai)
+- [semantic-chunker-tika](https://central.sonatype.com/artifact/io.github.slaouiss/semantic-chunker-tika)
+- [semantic-chunker-unstructured](https://central.sonatype.com/artifact/io.github.slaouiss/semantic-chunker-unstructured)
+
+Add the core plus the adapters you need.
+Use the latest version published on Maven Central.
 
 ```xml
 <!-- Always required. -->
