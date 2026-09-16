@@ -8,10 +8,11 @@
     <parent>
         <groupId>io.github.slaouiss</groupId>
         <artifactId>semantic-chunker</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </parent>
 
     <artifactId>semantic-chunker-core</artifactId>
+    <url>https://github.com/SlaouiSS/semantic-chunker</url>
     <packaging>jar</packaging>
 
     <name>semantic-chunker-core</name>
