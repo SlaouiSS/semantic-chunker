@@ -7,7 +7,7 @@
 
     <groupId>io.github.slaouiss</groupId>
     <artifactId>semantic-chunker</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
 
     <name>semantic-chunker</name>
@@ -87,7 +87,7 @@
         <!-- SCM coordinates for the release metadata, derived from the project URL. -->
         <scm.connection>scm:git:${project.url}.git</scm.connection>
         <scm.developerConnection>scm:git:${project.url}.git</scm.developerConnection>
-        <scm.tag>HEAD</scm.tag>
+        <scm.tag>v1.0.1</scm.tag>
 
         <!-- Release plugin versions, used only by the 'release' profile. -->
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
